@@ -1,0 +1,16 @@
+grid_prices = pd.DataFrame(columns=range(50), dtype = 'object')
+
+# Iterate through all the curves
+for i in range(energy_m_reduced.shape[0]):
+  qq = energy_m_reduced.iloc[i][2:].to_list()
+  pp = prices_m_reduced.iloc[i][2:].to_list()
+
+  # Remove the NaN values from the list
+  qq = [x for x in qq if not np.isnan(x)]
+  pp = [x for x in pp if not np.isnan(x)]
+
+  # Compute the interpolated values for the x_interp points
+  y_interp = constant_interpolation(qq, pp, x_interp)
+
+  # Add the obtained interpolations to the dataframe 
+  grid_prices.loc[i] = y_interp
