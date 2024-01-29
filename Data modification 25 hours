@@ -1,0 +1,62 @@
+fila_a_mover = prices_m.iloc[7295]
+# Removing the row from the origianl dataframe
+prices_m = prices_m.drop(7295)
+# Insert the extracted row in the new index
+prices_m = prices_m.iloc[:2087].append(fila_a_mover).append(prices_m.iloc[2087:]).reset_index(drop=True)
+
+fila_a_mover = prices_m.iloc[16031]
+# Removing the row from the origianl dataframe
+prices_m = prices_m.drop(16031)
+# Insert the extracted row in the new index
+prices_m = prices_m.iloc[:10823].append(fila_a_mover).append(prices_m.iloc[10823:]).reset_index(drop=True)
+
+fila_a_mover = prices_m.iloc[24767]
+# Removing the row from the origianl dataframe
+prices_m = prices_m.drop(24767)
+# Insert the extracted row in the new index
+prices_m = prices_m.iloc[:19559].append(fila_a_mover).append(prices_m.iloc[19559:]).reset_index(drop=True)
+
+fila_a_mover = prices_m.iloc[33503]
+# Removing the row from the origianl dataframe
+prices_m = prices_m.drop(33503)
+# Insertar la fila extraída en el índice 25
+prices_m = prices_m.iloc[:28463].append(fila_a_mover).append(prices_m.iloc[28463:]).reset_index(drop=True)
+
+fila_a_mover = prices_m.iloc[42239]
+# Removing the row from the origianl dataframe
+prices_m = prices_m.drop(42239)
+# Insert the extracted row in the new index
+prices_m = prices_m.iloc[:37199].append(fila_a_mover).append(prices_m.iloc[37199:]).reset_index(drop=True)
+
+
+
+
+fila_a_mover = energy_m.iloc[7295]
+# Removing the row from the origianl dataframe
+energy_m = energy_m.drop(7295)
+# Insert the extracted row in the new index
+energy_m = energy_m.iloc[:2087].append(fila_a_mover).append(energy_m.iloc[2087:]).reset_index(drop=True)
+
+fila_a_mover = energy_m.iloc[16031]
+# Removing the row from the origianl dataframe
+energy_m = energy_m.drop(16031)
+# Insert the extracted row in the new index
+energy_m = energy_m.iloc[:10823].append(fila_a_mover).append(energy_m.iloc[10823:]).reset_index(drop=True)
+
+fila_a_mover = energy_m.iloc[24767]
+# Removing the row from the origianl dataframe
+energy_m = energy_m.drop(24767)
+# Insert the extracted row in the new index
+energy_m = energy_m.iloc[:19559].append(fila_a_mover).append(energy_m.iloc[19559:]).reset_index(drop=True)
+
+fila_a_mover = energy_m.iloc[33503]
+# Removing the row from the origianl dataframe
+energy_m = energy_m.drop(33503)
+# Insert the extracted row in the new index
+energy_m = energy_m.iloc[:28463].append(fila_a_mover).append(energy_m.iloc[28463:]).reset_index(drop=True)
+
+fila_a_mover = energy_m.iloc[42239]
+# Removing the row from the origianl dataframe
+energy_m = energy_m.drop(42239)
+# Insert the extracted row in the new index
+energy_m = energy_m.iloc[:37199].append(fila_a_mover).append(energy_m.iloc[37199:]).reset_index(drop=True)
