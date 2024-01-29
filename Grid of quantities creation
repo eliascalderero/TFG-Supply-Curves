@@ -1,8 +1,0 @@
-# Put the grid between 0 and the maximum value of energy of the shortest curve computed before
-max_q = minimum
-min_q = 0
-
-# Defining the grid of quantities of energy
-x_interp = np.linspace(0, 0, 1)
-min_q = energy_m_reduced['x1'].quantile(0.3)
-x_interp = np.concatenate([x_interp, np.linspace(min_q, max_q, 49)])
