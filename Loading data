@@ -1,0 +1,94 @@
+energy_m_2020 = pd.DataFrame()
+prices_m_2020 = pd.DataFrame()
+
+# Iterate through the datasets
+for i in range(0,len(MypathsDet)):
+  data = pd.read_csv(MypathsDet[i], sep = ";", skiprows = 2, encoding = 'latin-1')
+
+  # Drop the last row as it only contains NA values
+  data.drop(data.index[-1], axis=0, inplace=True)
+
+  # Change from ('.') to ('') in the columns Price and Energy
+  data['Precio Compra/Venta'] = pd.concat([data['Precio Compra/Venta'].str.split()
+                        .str[0]
+                        .str.replace('.','')], axis=1)
+
+  data['Energía Compra/Venta'] = pd.concat([data['Energía Compra/Venta'].str.split()
+                       .str[0]
+                       .str.replace('.','')], axis=1)
+
+  # Change from (',') to ('.') in the columns Price and Energy
+  data['Precio Compra/Venta'] = pd.concat([data['Precio Compra/Venta'].str.split()
+                        .str[0]
+                        .str.replace(',','.')], axis=1)
+
+  data['Energía Compra/Venta'] = pd.concat([data['Energía Compra/Venta'].str.split()
+                       .str[0]
+                       .str.replace(',','.')], axis=1)
+
+  # Drop the column 'Unnamed: 8' as it only contains NA values
+  data = data.drop(['Unnamed: 8'], axis=1)
+
+  # Rename column 'Energía Compra/Venta' to remove the accent
+  data = data.rename(columns={'Energía Compra/Venta': 'Energia Compra/Venta'})
+
+  # Only take the data related to Sales (V)
+  data_ventas = data[data['Tipo Oferta'] == 'V']
+
+  # Only take columns 'Hora', 'Fecha', 'Energia', 'Precio'
+  df = data_ventas.loc[:, ['Hora', 'Fecha', 'Energia Compra/Venta', 'Precio Compra/Venta']]
+
+  # Change column 'Hora' to numeric type, and columns 'Energia' and 'Precio' to float type
+  df['Hora'] = df['Hora'].astype('int64')
+  df['Energia Compra/Venta'] = df['Energia Compra/Venta'].astype('float64')
+  df['Precio Compra/Venta'] = df['Precio Compra/Venta'].astype('float64')
+
+  # Ask if there are 23 hours or not in order to add an hour 24 equal to the 23 one
+  if len(df['Hora'].unique()) == 23:
+    # Filter rows with hour equal to 23
+    filas_hora_23 = df[df['Hora'] == 23]
+    # Change column hour to 24 instead of 23
+    filas_hora_23['Hora'] = 24
+    # Add the filtered rows to the original dataframe
+    df = pd.concat([df, filas_hora_23], ignore_index=True)
+
+  # Order by Price the dataframe (in ascending order of price) from the Hour = 1 to Hour = 24
+  dfhorario = pd.DataFrame()
+
+  for i in df['Hora'].unique():
+    order_i = pd.concat([df[df['Hora'] == i].sort_values(by = "Precio Compra/Venta")])
+    dfhorario = dfhorario.append(pd.concat([order_i]))
+
+  print(dfhorario)
+  # Iterate through the 24 hours
+  for hora in range(1, 25):
+      # Filter the dataframe dfhorario for the actual hour
+      df_por_hora = dfhorario[dfhorario['Hora'] == hora]
+
+      # Create a variable with a unique name for each iteration
+      nombre_variable = f'dfhorario_{hora}'
+      nombre_energia_hora = f'energy_m_{hora}'
+      nombre_precio_hora = f'precio_m_{hora}'
+
+      # Assign the dataframe to the variable
+      locals()[nombre_variable] = df_por_hora
+
+      # Add a new column named 'Energia Acumulada' in each dataframe
+      locals()[nombre_variable]['Energia Acumulada'] = locals()[nombre_variable]['Energia Compra/Venta'].cumsum()
+
+      # Add the corresponding columns with the number of rows that there are in each dfhorario_{hora} 
+      locals()[nombre_energia_hora] = pd.DataFrame({'Hora' : locals()[nombre_variable]['Hora'].unique(), 'Fecha' : locals()[nombre_variable]['Fecha'].unique()})
+      locals()[nombre_precio_hora] = pd.DataFrame({'Hora' : locals()[nombre_variable]['Hora'].unique(), 'Fecha' : locals()[nombre_variable]['Fecha'].unique()})
+
+      for i in range(locals()[nombre_variable].shape[0]):
+        locals()[nombre_energia_hora][i] = locals()[nombre_variable]['Energia Acumulada'].iloc[i]
+        locals()[nombre_precio_hora][i] = locals()[nombre_variable]['Precio Compra/Venta'].iloc[i]
+
+      energy_m_2020 = pd.concat([energy_m_2020, locals()[nombre_energia_hora]], ignore_index = True)
+      prices_m_2020 = pd.concat([prices_m_2020, locals()[nombre_precio_hora]], ignore_index = True)
+
+# Create the dataframe merging all the years
+energy_m = pd.concat([energy_m_2016, energy_m_2017, energy_m_2018, energy_m_2019, energy_m_2020], ignore_index = True)
+
+# Create the dataframe merging all the years
+prices_m = pd.concat([prices_m_2016, prices_m_2017, prices_m_2018, prices_m_2019, prices_m_2020], ignore_index = True)
