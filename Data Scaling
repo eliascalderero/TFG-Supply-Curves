@@ -1,0 +1,17 @@
+# ENERGY
+# Divide all the columns by Q*
+df_scaled = energy_m_reduced.iloc[:, 2:] / energy_m_reduced.iloc[42601, 386]
+
+# Merge the new scaled dataframe with the columns 'hour' and 'date'
+energy_m_reduced_scaled = pd.concat([energy_m_reduced.iloc[:, :2], df_scaled], axis=1)
+
+# PRICES
+# Divide all the columns by Q*
+df_scaled_p = prices_m_reduced.iloc[:, 2:] / prices_m_reduced.iloc[42601, 386]
+
+# Merge the new scaled dataframe with the columns 'hour' and 'date'
+prices_m_reduced_scaled = pd.concat([prices_m_reduced.iloc[:, :2], df_scaled_p], axis=1)
+
+# EVOLUTION OF PRICES FOR THE GRID OF QUANTITIES
+# Divide by the maximum value of the last column, where the maximum number is
+grid_prices_scaled = grid_prices / grid_prices.iloc[:, -1].max()
