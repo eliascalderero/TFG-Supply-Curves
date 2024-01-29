@@ -1,9 +1,0 @@
-# Real curve for January 22, 2016
-qq = energy_m_reduced.iloc[510][2:].to_list()
-pp = prices_m_reduced.iloc[510][2:].to_list()
-
-# Visualization of the real curve and the approximated curve
-fig, ax = plt.subplots(figsize = (10,6))
-plt.step(qq,pp, label = "Real")
-plt.step(x_interp[1:], grid_prices.iloc[510, 1:], label = "Approximation")
-plt.legend(["Real Curve", "Approximation Curve"])
