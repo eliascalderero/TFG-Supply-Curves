@@ -1,0 +1,20 @@
+# Put the grid between 0 and the maximum value of energy of the shortest curve computed before
+max_q = minimum
+min_q = 0
+
+# Function for the constant interpolation
+def constant_interpolation(qq, pp, x_interp):
+    result = np.zeros_like(x_interp)
+    result[x_interp < qq[0]] = pp[0]  # Assign the first value of pp to x_interp < qq[0]
+    for i, xi in enumerate(qq):
+        mask = (x_interp >= xi)
+        if i < len(qq) - 1:
+            result[mask] = pp[i + 1]
+        else:
+            result[mask] = pp[-1]
+    return result
+
+# Defining the grid of quantities of energy
+x_interp = np.linspace(0, 0, 1)
+min_q = energy_m_reduced['x1'].quantile(0.3)
+x_interp = np.concatenate([x_interp, np.linspace(min_q, max_q, 49)])
