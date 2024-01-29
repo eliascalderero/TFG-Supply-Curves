@@ -9,3 +9,12 @@ def constant_interpolation(qq, pp, x_interp):
         else:
             result[mask] = pp[-1]
     return result
+
+# Definition of the L1 distance
+def l1_distance(qq, pp, qq1, pp1, diferencias, qq_combinada):
+  distancia_l1 = 0
+  y1 = constant_interpolation(qq, pp, (np.array(qq_combinada[1:]) + np.array(qq_combinada[0:-1])) / 2)
+  y2 = constant_interpolation(qq1, pp1, (np.array(qq_combinada[1:]) + np.array(qq_combinada[0:-1])) / 2)
+  distancia_l1 = np.sum(np.abs(y1 - y2) * diferencias)
+
+  return distancia_l1
