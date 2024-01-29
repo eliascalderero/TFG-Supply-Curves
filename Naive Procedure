@@ -1,0 +1,46 @@
+# Create an empty dataframe
+naive_l1_distances = pd.DataFrame()
+
+for d in range(1097, 1827):
+
+  for h in range(1, 25):
+
+    qq = energy_m_reduced_scaled.iloc[(h-1) + (d-1) * 24][2:].to_list()
+    pp = prices_m_reduced_scaled.iloc[(h-1) + (d-1) * 24][2:].to_list()
+
+    # In order to compare the 24 hours before curve, it is just needed to subtract 24 hours in the formula
+    qq1 = energy_m_reduced_scaled.iloc[(h-1) + (d-1) * 24 - 24][2:].to_list()
+    pp1 = prices_m_reduced_scaled.iloc[(h-1) + (d-1) * 24 - 24][2:].to_list()
+
+    # Remove NaN values from the list
+    qq = [x for x in qq if not np.isnan(x)]
+    qq1 = [x for x in qq1 if not np.isnan(x)]
+    pp = [x for x in pp if not np.isnan(x)]
+    pp1 = [x for x in pp1 if not np.isnan(x)]
+
+    # The list of combined qq´s is obtained and then sorted
+    qq_combinada = list(set(qq + qq1))
+    qq_combinada = sorted(qq_combinada)
+
+    # Initialize a list to store the differences between successive elements (q's)
+    diferencias = np.diff(qq_combinada).tolist()
+
+    # Compute the L1 distance between the two step functions
+    l1 = l1_distance(qq, pp, qq1, pp1, diferencias, qq_combinada)
+
+    # Add to each column its distance value
+    naive_l1_distances.at[d, f'{h}'] = l1
+
+    print(f"Distancia L1 (Manhattan) para la hora {h} del día {d}:", l1)
+    print('------------------------')
+    print()
+
+
+# Reset the indices to start at 0
+naive_l1_distances.reset_index(drop=True, inplace=True)
+
+# Mean error for each hour
+naive_l1_distances.mean()
+
+# Mean daily prediction error
+round(sum(naive_l1_distances.mean()) / 24, 4)
